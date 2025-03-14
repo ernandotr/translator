@@ -17,7 +17,9 @@ public class LanguagesRepository {
             "sw| Swahili",
             "ko| Korean",
             "it| Italian",
-            "he| Hebrew"
+            "he| Hebrew",
+            "el| Greek",
+            "la| Latin"
     };
 
     public String [] getLanguages() {

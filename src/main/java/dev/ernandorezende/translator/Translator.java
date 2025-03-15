@@ -8,15 +8,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
 
 public class Translator {
 
-    public String translate(String query,String sourceLang,String targetLang) {
+    public static final String BASE_URL = "https://api.mymemory.translated.net/get?q=";
+    private final Logger logger = Logger.getLogger("Translator");
+
+    public String translate(String query, String sourceLang, String targetLang) {
         try {
             String encodedQuery = URLEncoder.encode(query, "UTF-8");
             String langPair = sourceLang+"|"+targetLang;
             langPair = URLEncoder.encode(langPair,"UTF-8");
-            String apiUrl = "https://api.mymemory.translated.net/get?q=" + encodedQuery + "&langpair=" + langPair;
+            String apiUrl = BASE_URL + encodedQuery + "&langpair=" + langPair;
 
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -38,18 +42,18 @@ public class Translator {
                 JSONObject responseData = object.getJSONObject("responseData");
                 String translatedText = responseData.getString("translatedText");
 
-                System.out.println("Response Data: " + responseData);
-                System.out.println("Translated Text: " + translatedText);
+                logger.info("Response Data: {}" + responseData);
+                logger.info("Translated Text: " + translatedText);
                 connection.disconnect();
                 return translatedText;
             } else {
-                System.out.println("Request failed with response code: " + responseCode);
+                logger.info("Request failed with response code: " + responseCode);
                 connection.disconnect();
                 return "Request failed with response code: " +responseCode;
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
 
             return e.getMessage();
         }
